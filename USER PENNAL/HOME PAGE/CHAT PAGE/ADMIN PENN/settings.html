@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - ADMIN PENNAL</title>
+    <link rel="icon" href="../../../../IMAGE/faviconV2.png" type="image/png">
+    <link rel="stylesheet" href="chat.css">
+</head>
+<body>
+
+    <div class="admin-app">
+
+        <a href="index.html" class="back-link">&larr; Back</a>
+
+        <div class="admin-head">
+            <h1 class="admin-title">SETTINGS</h1>
+        </div>
+
+        <div class="settings-box">
+            <label class="settings-label" for="tgToken">Bot Token</label>
+            <input type="text" id="tgToken" class="settings-input" placeholder="Enter Bot Token">
+
+            <label class="settings-label" for="tgChatId">Chat Id</label>
+            <input type="text" id="tgChatId" class="settings-input" placeholder="Enter Chat Id">
+
+            <button id="saveBtn" class="settings-save-btn">Save</button>
+            <p id="saveMsg" class="settings-msg"></p>
+
+            <p class="settings-note">Ye settings sirf isi device par save hoti hai. Jab koi user chat karega to Telegram channel par notification mil jayega.</p>
+        </div>
+
+    </div>
+
+    <script src="notify.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var s = getTgSettings();
+            document.getElementById('tgToken').value = s.token;
+            document.getElementById('tgChatId').value = s.chatId;
+
+            document.getElementById('saveBtn').addEventListener('click', function () {
+                var token = document.getElementById('tgToken').value.trim();
+                var chatId = document.getElementById('tgChatId').value.trim();
+                if (!token || !chatId) {
+                    document.getElementById('saveMsg').textContent = 'Please fill both Bot Token and Chat Id.';
+                    document.getElementById('saveMsg').style.color = '#d32f2f';
+                    return;
+                }
+                saveTgSettings(token, chatId);
+                document.getElementById('saveMsg').textContent = 'Saved successfully ✓';
+                document.getElementById('saveMsg').style.color = '#00c853';
+            });
+        });
+    </script>
+</body>
+</html>
