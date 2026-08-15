@@ -58,6 +58,7 @@
     function showChat() {
         document.getElementById('loginScreen').classList.add('hidden');
         document.getElementById('chatApp').classList.remove('hidden');
+        listenMessages();
         renderMessages();
     }
 
@@ -136,7 +137,6 @@
 
         bindMenu();
         bindChatEvents();
-        listenMessages();
     });
 
     function openUidModal() {
@@ -166,8 +166,12 @@
         document.getElementById('logoutBtn').addEventListener('click', function () {
             var uid = currentUser ? currentUser.uid : null;
             localStorage.removeItem(USER_KEY);
+            if (uid) {
+                db.ref('bdg-chat/chat/' + uid + '/messages').off();
+                usersRef.child(uid).child('status').set('offline');
+            }
             currentUser = null;
-            if (uid) { usersRef.child(uid).child('status').set('offline'); }
+            listening = false;
             dropdown.classList.add('hidden');
             msgMap = {};
             document.getElementById('chatBody').innerHTML = '';
@@ -183,7 +187,11 @@
 
     /* ============ MESSAGES (FIREBASE) ============ */
 
+    var listening = false;
+
     function listenMessages() {
+        if (listening || !currentUser) { return; }
+        listening = true;
         conversationRef().on('child_added', function (snap) {
             msgMap[snap.key] = snap.val();
             renderMessages();
