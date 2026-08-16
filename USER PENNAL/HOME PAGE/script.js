@@ -1,20 +1,22 @@
 document.addEventListener('DOMContentLoaded', function () {
     const options = document.querySelectorAll('.option');
+    const pages = {
+        deposit: 'deposit-problem.html',
+        withdrawal: 'withdrawal-problem.html',
+        game: 'game-problem.html',
+        faq: 'faq.html',
+        livechat: 'CHAT PAGE/USER PAGE/USER PENNAL.html'
+    };
 
     options.forEach(function (option) {
         option.addEventListener('click', function () {
             const name = option.getAttribute('data-option');
 
-            if (name === 'deposit') {
-                window.open('deposit-problem.html', '_blank');
-            } else if (name === 'withdrawal') {
-                window.open('withdrawal-problem.html', '_blank');
-            } else if (name === 'game') {
-                window.open('game-problem.html', '_blank');
-            } else if (name === 'faq') {
-                window.open('faq.html', '_blank');
-            } else if (name === 'livechat') {
-                window.open('CHAT PAGE/USER PAGE/USER PENNAL.html', '_blank');
+            if (pages[name]) {
+                option.style.animation = 'popPress 0.18s ease';
+                setTimeout(function () {
+                    window.open(pages[name], '_blank');
+                }, 160);
             } else {
                 options.forEach(function (o) {
                     o.classList.remove('selected');
@@ -23,13 +25,4 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     });
-
-    const gform = document.getElementById('gameForm');
-    if (gform) {
-        gform.addEventListener('submit', function (e) {
-            e.preventDefault();
-            alert('Your Game Problem has been submitted. We will contact you soon.');
-            gform.reset();
-        });
-    }
 });

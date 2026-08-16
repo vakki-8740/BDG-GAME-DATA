@@ -14,10 +14,42 @@ body {
     min-height: 100vh;
 }
 
+@keyframes pageIn {
+    from {
+        opacity: 0;
+        transform: translateY(24px) scale(0.98);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
 .container {
     max-width: 600px;
     margin: 0 auto;
     padding: 20px;
+    animation: pageIn 0.4s ease-out;
+}
+
+@keyframes popPress {
+    0% { transform: scale(1); }
+    50% { transform: scale(0.95); }
+    100% { transform: scale(1); }
+}
+
+.option {
+    transition: transform 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.option:active {
+    transform: scale(0.96);
+}
+
+.mailbox-btn:active,
+.back-circle:active {
+    transform: scale(0.88);
+    transition: transform 0.12s ease;
 }
 
 .banner {
@@ -49,6 +81,211 @@ body {
     color: #d4a017;
     margin-bottom: 25px;
     letter-spacing: 1px;
+}
+
+.home-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 25px;
+}
+
+.home-head .heading-left {
+    margin-bottom: 0;
+}
+
+.mailbox-btn {
+    width: 44px;
+    height: 44px;
+    border: 2px solid #d4a017;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #d4a017;
+    background-color: #ffffff;
+    text-decoration: none;
+    flex-shrink: 0;
+    transition: background-color 0.2s ease;
+}
+
+.mailbox-btn:hover {
+    background-color: #fdf3dd;
+}
+
+.mailbox-btn svg {
+    width: 22px;
+    height: 22px;
+}
+
+.mailbox-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.complaint-card {
+    background-color: #ffffff;
+    border: 2px solid #e0e0e0;
+    border-radius: 14px;
+    padding: 14px 16px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.complaint-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.complaint-type {
+    font-size: 14px;
+    font-weight: 700;
+    color: #ffffff;
+    background-color: #d4a017;
+    border-radius: 8px;
+    padding: 4px 12px;
+}
+
+.complaint-time {
+    font-size: 12px;
+    color: #999999;
+}
+
+.complaint-row {
+    display: flex;
+    gap: 8px;
+    font-size: 13.5px;
+    color: #333333;
+    line-height: 1.6;
+}
+
+.complaint-row b {
+    color: #d4a017;
+    font-weight: 600;
+    flex-shrink: 0;
+    min-width: 70px;
+}
+
+.complaint-row span {
+    word-break: break-word;
+    flex: 1;
+}
+
+.complaint-img {
+    width: 100%;
+    margin-top: 10px;
+    border-radius: 10px;
+    border: 1px solid #e0e0e0;
+    display: block;
+}
+
+.complaint-card.tappable {
+    cursor: pointer;
+    transition: border-color 0.2s ease;
+}
+
+.complaint-card.tappable:hover {
+    border-color: #d4a017;
+}
+
+.complaint-hint {
+    margin-top: 10px;
+    font-size: 12px;
+    color: #d4a017;
+    text-align: right;
+}
+
+.detail-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.55);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    animation: fadeIn 0.2s ease;
+}
+
+.detail-modal.closing {
+    animation: fadeOut 0.2s ease forwards;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes fadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
+
+.detail-box {
+    width: 90%;
+    max-width: 420px;
+    max-height: 85vh;
+    overflow-y: auto;
+    background-color: #ffffff;
+    border: 2px solid #d4a017;
+    border-radius: 16px;
+    padding: 20px 18px;
+    position: relative;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+}
+
+.detail-close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 34px;
+    height: 34px;
+    border: 2px solid #d4a017;
+    border-radius: 50%;
+    background-color: #ffffff;
+    color: #d4a017;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.detail-close svg {
+    width: 16px;
+    height: 16px;
+}
+
+.detail-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+    padding-right: 40px;
+}
+
+.complaint-no {
+    font-size: 12px;
+    font-weight: 700;
+    color: #999999;
+    letter-spacing: 1px;
+}
+
+.empty-msg {
+    text-align: center;
+    color: #999999;
+    font-size: 14px;
+    margin-top: 30px;
+}
+
+.complaint-loading {
+    text-align: center;
+    color: #999999;
+    font-size: 14px;
+    margin-top: 30px;
 }
 
 .options {
@@ -248,6 +485,25 @@ body {
     font-size: 14px;
     font-weight: 600;
     color: #555555;
+}
+
+.success-tick {
+    width: 54px;
+    height: 54px;
+    border-radius: 50%;
+    background-color: #d4a017;
+    color: #ffffff;
+    font-size: 28px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: popIn 0.3s ease;
+}
+
+@keyframes popIn {
+    0% { transform: scale(0.3); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
 }
 
 .faq-category {

