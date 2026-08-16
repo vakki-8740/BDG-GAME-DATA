@@ -67,11 +67,11 @@ body {
 
 .heading {
     text-align: center;
-    font-size: 24px;
+    font-size: 18px;
     font-weight: 700;
     color: #d4a017;
     margin-bottom: 25px;
-    letter-spacing: 1px;
+    letter-spacing: 0.5px;
 }
 
 .heading-left {
