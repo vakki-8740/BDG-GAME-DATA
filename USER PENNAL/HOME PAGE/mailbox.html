@@ -19,6 +19,14 @@
 
             <h1 class="heading">MAIL BOX</h1>
 
+            <div id="loginBox" class="login-box hidden">
+                <h2 class="login-title">USER LOGIN</h2>
+                <input type="text" id="loginName" placeholder="Enter Your Name" required>
+                <input type="text" id="loginUid" placeholder="Enter Your UID" required>
+                <button id="loginBtn" class="login-btn">Login</button>
+                <p id="loginError" class="login-error"></p>
+            </div>
+
             <div id="mailList" class="mailbox-list">
                 <p class="complaint-loading">Loading complaints...</p>
             </div>
@@ -55,6 +63,35 @@
             var detailBody = document.getElementById('detailBody');
             var complaints = [];
 
+            var USER_KEY = 'bdg_complain_user';
+            var currentUser = null;
+            try { currentUser = JSON.parse(localStorage.getItem(USER_KEY)); } catch (e) { currentUser = null; }
+
+            var loginBox = document.getElementById('loginBox');
+            var loginBtn = document.getElementById('loginBtn');
+
+            if (currentUser && currentUser.name && currentUser.uid) {
+                loginBox.classList.add('hidden');
+            } else {
+                loginBox.classList.remove('hidden');
+                loginBtn.addEventListener('click', doLogin);
+            }
+
+            function doLogin() {
+                var name = document.getElementById('loginName').value.trim();
+                var uid = document.getElementById('loginUid').value.trim();
+                var err = document.getElementById('loginError');
+                if (!name || !uid) {
+                    err.textContent = 'Please enter both Name and UID.';
+                    return;
+                }
+                err.textContent = '';
+                currentUser = { name: name, uid: uid };
+                localStorage.setItem(USER_KEY, JSON.stringify(currentUser));
+                loginBox.classList.add('hidden');
+                render();
+            }
+
             document.getElementById('detailClose').addEventListener('click', closeDetail);
             modal.addEventListener('click', function (e) {
                 if (e.target === modal) { closeDetail(); }
@@ -76,15 +113,24 @@
                     complaints.push(c);
                 });
                 complaints.reverse();
-                if (!complaints.length) {
+                render();
+            });
+
+            function render() {
+                if (!currentUser || !currentUser.uid) {
+                    list.innerHTML = '<p class="empty-msg">Please login to see your complaints.</p>';
+                    return;
+                }
+                var mine = complaints.filter(function (c) { return c.uid === currentUser.uid; });
+                if (!mine.length) {
                     list.innerHTML = '<p class="empty-msg">No complaints yet.</p>';
                     return;
                 }
                 list.innerHTML = '';
-                complaints.forEach(function (c) {
+                mine.forEach(function (c) {
                     list.appendChild(complaintCard(c));
                 });
-            });
+            }
 
             function complaintCard(c) {
                 var card = document.createElement('div');

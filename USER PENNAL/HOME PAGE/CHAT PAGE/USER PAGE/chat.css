@@ -10,6 +10,11 @@ body {
     min-height: 100vh;
 }
 
+body.chat-page {
+    height: 100%;
+    overflow: hidden;
+}
+
 .hidden {
     display: none !important;
 }
@@ -67,6 +72,7 @@ body {
     align-items: center;
     justify-content: center;
     min-height: 100vh;
+    min-height: 100dvh;
 }
 
 .login-title {
@@ -160,9 +166,11 @@ body {
     max-width: 600px;
     margin: 0 auto;
     height: 100vh;
+    height: 100dvh;
     display: flex;
     flex-direction: column;
     background-color: #ffffff;
+    overflow: hidden;
     animation: chatIn 0.4s ease-out;
 }
 
