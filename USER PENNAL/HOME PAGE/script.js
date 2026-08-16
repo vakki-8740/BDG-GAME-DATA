@@ -1,4 +1,14 @@
 document.addEventListener('DOMContentLoaded', function () {
+    setTimeout(function () {
+        var splash = document.getElementById('splashScreen');
+        if (splash) {
+            splash.classList.add('fade-out');
+            setTimeout(function () {
+                splash.classList.add('hidden');
+            }, 550);
+        }
+    }, 2200);
+
     const options = document.querySelectorAll('.option');
     const pages = {
         deposit: 'deposit-problem.html',
